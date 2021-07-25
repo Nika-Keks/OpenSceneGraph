@@ -7,6 +7,7 @@
 #include <osg/ShapeDrawable>
 #include <osg/Texture2D>
 #include <osg/TextureCubeMap>
+#include <osgDB/WriteFile>
 
 #include <components/misc/stringops.hpp>
 #include <components/resource/resourcesystem.hpp>
@@ -22,6 +23,7 @@
 #include "util.hpp"
 #include "vismask.hpp"
 #include "water.hpp"
+
 
 namespace MWRender
 {
@@ -90,6 +92,11 @@ namespace MWRender
             int height = screenH - topPadding*2;
             mImage->readPixels(leftPadding, topPadding, width, height, GL_RGB, GL_UNSIGNED_BYTE);
             mImage->scaleImage(mWidth, mHeight, 1);
+
+            if (osgDB::writeImageFile(*mImage, "C:\\Users\\Acer\\Desktop\\img.bmp"))
+                std::cout << "PtrSc success" << std::endl;
+            else
+                std::cout << "PtrSc   error" << std::endl;
         }
     private:
         int mWidth;
@@ -139,7 +146,11 @@ namespace MWRender
         {
             std::string typeStrings[4] = {"spherical", "cylindrical", "planet", "cubemap"};
             bool found = false;
-
+            if (settingArgs[0].compare("hrandlr") == 0)
+            {
+                screenshotMapping = static_cast<Screenshot360Type>(0);
+                found = true;
+            }
             for (int i = 0; i < 4; ++i)
             {
                 if (settingArgs[0].compare(typeStrings[i]) == 0)
@@ -262,6 +273,13 @@ namespace MWRender
 
         return true;
     }
+
+    void ScreenshotManager::screenshotHRLR(osg::Image* imgLR, osg::Image* imgHR)
+    {
+        screenshot360(imgHR);
+        screenshot360(imgLR);
+    }
+
 
     void ScreenshotManager::traversalsAndWait(unsigned int frame)
     {

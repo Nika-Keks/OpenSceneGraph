@@ -16,6 +16,7 @@
 #include <sstream>
 #include <string>
 #include <atomic>
+#include <osgDB/WriteFile>
 
 namespace
 {

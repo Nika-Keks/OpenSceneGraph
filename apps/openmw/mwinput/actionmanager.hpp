@@ -23,6 +23,15 @@ namespace MWInput
             osg::ref_ptr<osgViewer::Viewer> viewer,
             osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler);
 
+        ActionManager(BindingsManager* bindingsManager,
+            osgViewer::ScreenCaptureHandler::CaptureOperation* screenCaptureOperation,
+            osg::ref_ptr<osgViewer::Viewer> viewer,
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler,
+            osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation,
+            osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation,
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler,
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler);
+
         void update(float dt, bool triedToMove);
 
         void executeAction(int action);
@@ -65,6 +74,11 @@ namespace MWInput
         osg::ref_ptr<osgViewer::Viewer> mViewer;
         osg::ref_ptr<osgViewer::ScreenCaptureHandler> mScreenCaptureHandler;
         osgViewer::ScreenCaptureHandler::CaptureOperation* mScreenCaptureOperation;
+
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> mHRScreenCaptureHandler;
+        osgViewer::ScreenCaptureHandler::CaptureOperation* mHRScreenCaptureOperation;
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> mLRScreenCaptureHandler;
+        osgViewer::ScreenCaptureHandler::CaptureOperation* mLRScreenCaptureOperation;
 
         bool mAlwaysRunActive;
         bool mSneaking;

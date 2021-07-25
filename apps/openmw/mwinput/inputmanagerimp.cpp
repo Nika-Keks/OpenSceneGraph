@@ -54,6 +54,41 @@ namespace MWInput
         mInputWrapper->setSensorEventCallback(mSensorManager);
     }
 
+    InputManager::InputManager(SDL_Window* window, 
+        osg::ref_ptr<osgViewer::Viewer> viewer, 
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler, 
+        osgViewer::ScreenCaptureHandler::CaptureOperation* screenCaptureOperation, 
+        const std::string& userFile, bool userFileExists, const std::string& userControllerBindingsFile, 
+        const std::string& controllerBindingsFile, bool grab, 
+        osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation, 
+        osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation, 
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler, 
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler)
+        : mControlsDisabled(false)
+    {
+        mInputWrapper = new SDLUtil::InputWrapper(window, viewer, grab);
+        mInputWrapper->setWindowEventCallback(MWBase::Environment::get().getWindowManager());
+
+        mBindingsManager = new BindingsManager(userFile, userFileExists);
+
+        mControlSwitch = new ControlSwitch();
+
+        mActionManager = new ActionManager(mBindingsManager, screenCaptureOperation, viewer, screenCaptureHandler, 
+            hrScreenCaptureOperation, lrScreenCaptureOperation, hrScreenCaptureHandler, lrScreenCaptureHandler);
+
+        mKeyboardManager = new KeyboardManager(mBindingsManager);
+        mInputWrapper->setKeyboardEventCallback(mKeyboardManager);
+
+        mMouseManager = new MouseManager(mBindingsManager, mInputWrapper, window);
+        mInputWrapper->setMouseEventCallback(mMouseManager);
+
+        mControllerManager = new ControllerManager(mBindingsManager, mActionManager, mMouseManager, userControllerBindingsFile, controllerBindingsFile);
+        mInputWrapper->setControllerEventCallback(mControllerManager);
+
+        mSensorManager = new SensorManager();
+        mInputWrapper->setSensorEventCallback(mSensorManager);
+    }
+
     void InputManager::clear()
     {
         // Enable all controls

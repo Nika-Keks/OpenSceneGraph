@@ -55,6 +55,19 @@ namespace MWInput
             const std::string& userControllerBindingsFile,
             const std::string& controllerBindingsFile, bool grab);
 
+        InputManager(
+            SDL_Window* window,
+            osg::ref_ptr<osgViewer::Viewer> viewer,
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler,
+            osgViewer::ScreenCaptureHandler::CaptureOperation* screenCaptureOperation,
+            const std::string& userFile, bool userFileExists,
+            const std::string& userControllerBindingsFile,
+            const std::string& controllerBindingsFile, bool grab,
+            osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation,
+            osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation,
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler,
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler);
+
         virtual ~InputManager();
 
         /// Clear all savegame-specific data

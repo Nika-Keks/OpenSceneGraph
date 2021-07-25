@@ -69,6 +69,12 @@ namespace OMW
             osg::ref_ptr<osgViewer::Viewer> mViewer;
             osg::ref_ptr<osgViewer::ScreenCaptureHandler> mScreenCaptureHandler;
             osg::ref_ptr<SceneUtil::AsyncScreenCaptureOperation> mScreenCaptureOperation;
+        //
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> mHRScreenCaptureHandler;
+            osg::ref_ptr<SceneUtil::AsyncScreenCaptureOperation> mHRScreenCaptureOperation;
+            osg::ref_ptr<osgViewer::ScreenCaptureHandler> mLRScreenCaptureHandler;
+            osg::ref_ptr<SceneUtil::AsyncScreenCaptureOperation> mLRScreenCaptureOperation;
+        //
             std::string mCellName;
             std::vector<std::string> mContentFiles;
             std::vector<std::string> mGroundcoverFiles;
