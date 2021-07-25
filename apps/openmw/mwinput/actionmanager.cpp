@@ -43,9 +43,7 @@ namespace MWInput
         , mOverencumberedMessageDelay(0.f)
         , mPreviewPOVDelay(0.f)
         , mTimeIdle(0.f)
-        , mHRScreenCaptureHandler(nullptr)
         , mHRScreenCaptureOperation(nullptr)
-        , mLRScreenCaptureHandler(nullptr)
         ,mLRScreenCaptureOperation(nullptr)
     {
     }
@@ -55,15 +53,11 @@ namespace MWInput
         osg::ref_ptr<osgViewer::Viewer> viewer, 
         osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler, 
         osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation, 
-        osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation,
-        osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler,
-        osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler) :
-    ActionManager(bindingsManager, screenCaptureOperation, viewer, screenCaptureHandler)
+        osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation)
+    : ActionManager(bindingsManager, screenCaptureOperation, viewer, screenCaptureHandler)
     {
         mHRScreenCaptureOperation = hrScreenCaptureOperation;
-        mHRScreenCaptureHandler = hrScreenCaptureHandler;
         mLRScreenCaptureOperation = lrScreenCaptureOperation;
-        mLRScreenCaptureHandler = lrScreenCaptureHandler;
     }
 
     void ActionManager::update(float dt, bool triedToMove)

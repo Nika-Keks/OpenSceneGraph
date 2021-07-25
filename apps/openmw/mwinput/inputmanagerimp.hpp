@@ -64,9 +64,7 @@ namespace MWInput
             const std::string& userControllerBindingsFile,
             const std::string& controllerBindingsFile, bool grab,
             osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation,
-            osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation,
-            osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler,
-            osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler);
+            osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation);
 
         virtual ~InputManager();
 

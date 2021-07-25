@@ -28,9 +28,7 @@ namespace MWInput
             osg::ref_ptr<osgViewer::Viewer> viewer,
             osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler,
             osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation,
-            osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation,
-            osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler,
-            osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler);
+            osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation);
 
         void update(float dt, bool triedToMove);
 
@@ -75,9 +73,7 @@ namespace MWInput
         osg::ref_ptr<osgViewer::ScreenCaptureHandler> mScreenCaptureHandler;
         osgViewer::ScreenCaptureHandler::CaptureOperation* mScreenCaptureOperation;
 
-        osg::ref_ptr<osgViewer::ScreenCaptureHandler> mHRScreenCaptureHandler;
         osgViewer::ScreenCaptureHandler::CaptureOperation* mHRScreenCaptureOperation;
-        osg::ref_ptr<osgViewer::ScreenCaptureHandler> mLRScreenCaptureHandler;
         osgViewer::ScreenCaptureHandler::CaptureOperation* mLRScreenCaptureOperation;
 
         bool mAlwaysRunActive;

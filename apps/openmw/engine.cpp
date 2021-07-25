@@ -430,6 +430,10 @@ OMW::Engine::~Engine()
 {
     if (mScreenCaptureOperation != nullptr)
         mScreenCaptureOperation->stop();
+    if (mHRScreenCaptureOperation != nullptr)
+        mHRScreenCaptureOperation->stop();
+    if (mLRScreenCaptureOperation != nullptr)
+        mLRScreenCaptureOperation->stop();
 
     mEnvironment.cleanup();
 
@@ -798,7 +802,7 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
     mEnvironment.setWindowManager (window);
 
     MWInput::InputManager* input = new MWInput::InputManager (mWindow, mViewer, mScreenCaptureHandler, mScreenCaptureOperation, keybinderUser, keybinderUserExists, userGameControllerdb, gameControllerdb, mGrab,
-        mHRScreenCaptureOperation, mLRScreenCaptureOperation, mHRScreenCaptureHandler, mLRScreenCaptureHandler);
+        mHRScreenCaptureOperation, mLRScreenCaptureOperation);
     mEnvironment.setInputManager (input);
 
     // Create sound system

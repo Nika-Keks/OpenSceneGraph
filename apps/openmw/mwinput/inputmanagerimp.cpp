@@ -61,9 +61,7 @@ namespace MWInput
         const std::string& userFile, bool userFileExists, const std::string& userControllerBindingsFile, 
         const std::string& controllerBindingsFile, bool grab, 
         osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation, 
-        osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation, 
-        osg::ref_ptr<osgViewer::ScreenCaptureHandler> hrScreenCaptureHandler, 
-        osg::ref_ptr<osgViewer::ScreenCaptureHandler> lrScreenCaptureHandler)
+        osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation)
         : mControlsDisabled(false)
     {
         mInputWrapper = new SDLUtil::InputWrapper(window, viewer, grab);
@@ -74,7 +72,7 @@ namespace MWInput
         mControlSwitch = new ControlSwitch();
 
         mActionManager = new ActionManager(mBindingsManager, screenCaptureOperation, viewer, screenCaptureHandler, 
-            hrScreenCaptureOperation, lrScreenCaptureOperation, hrScreenCaptureHandler, lrScreenCaptureHandler);
+            hrScreenCaptureOperation, lrScreenCaptureOperation);
 
         mKeyboardManager = new KeyboardManager(mBindingsManager);
         mInputWrapper->setKeyboardEventCallback(mKeyboardManager);
