@@ -276,8 +276,14 @@ namespace MWRender
 
     void ScreenshotManager::screenshotHRLR(osg::Image* imgLR, osg::Image* imgHR)
     {
-        screenshot360(imgHR);
-        screenshot360(imgLR);
+        
+        int scale = 2;
+        int HRWidth = mViewer->getCamera()->getViewport()->width();
+        int HRHeight = mViewer->getCamera()->getViewport()->height();
+        int LRWidth = HRWidth / scale;
+        int LRHeight = HRHeight / scale;
+        renderInResolution(imgLR, LRWidth, LRHeight);
+        renderInResolution(imgHR, HRWidth, HRHeight);
     }
 
 
@@ -350,5 +356,20 @@ namespace MWRender
         rttCamera->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         renderCameraToImage(rttCamera.get(),image,w,h);
+    }
+
+    void ScreenshotManager::renderInResolution(osg::Image* image, int w, int h)
+    {
+        osg::ref_ptr<osg::Camera> camera(new osg::Camera);
+
+        camera->setClearColor(mViewer->getCamera()->getClearColor());
+        camera->setClearMask(mViewer->getCamera()->getClearMask());
+        camera->setColorMask(mViewer->getCamera()->getColorMask());
+        camera->setTransformOrder(mViewer->getCamera()->getTransformOrder());
+        camera->setProjectionMatrix(mViewer->getCamera()->getProjectionMatrix());
+        camera->setViewMatrix(mViewer->getCamera()->getViewMatrix());
+        camera->addChild(mSceneRoot);
+        
+        renderCameraToImage(camera, image, w, h);
     }
 }
