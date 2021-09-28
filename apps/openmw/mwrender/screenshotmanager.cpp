@@ -7,6 +7,7 @@
 #include <osg/ShapeDrawable>
 #include <osg/Texture2D>
 #include <osg/TextureCubeMap>
+#include <osgDB/WriteFile>
 
 #include <components/misc/stringops.hpp>
 #include <components/resource/resourcesystem.hpp>
@@ -22,6 +23,7 @@
 #include "util.hpp"
 #include "vismask.hpp"
 #include "water.hpp"
+
 
 namespace MWRender
 {
@@ -90,6 +92,11 @@ namespace MWRender
             int height = screenH - topPadding*2;
             mImage->readPixels(leftPadding, topPadding, width, height, GL_RGB, GL_UNSIGNED_BYTE);
             mImage->scaleImage(mWidth, mHeight, 1);
+
+            if (osgDB::writeImageFile(*mImage, "C:\\Users\\Acer\\Desktop\\img.bmp"))
+                std::cout << "PtrSc success" << std::endl;
+            else
+                std::cout << "PtrSc   error" << std::endl;
         }
     private:
         int mWidth;
@@ -139,7 +146,11 @@ namespace MWRender
         {
             std::string typeStrings[4] = {"spherical", "cylindrical", "planet", "cubemap"};
             bool found = false;
-
+            if (settingArgs[0].compare("hrandlr") == 0)
+            {
+                screenshotMapping = static_cast<Screenshot360Type>(0);
+                found = true;
+            }
             for (int i = 0; i < 4; ++i)
             {
                 if (settingArgs[0].compare(typeStrings[i]) == 0)
@@ -263,6 +274,19 @@ namespace MWRender
         return true;
     }
 
+    void ScreenshotManager::screenshotHRLR(osg::Image* imgLR, osg::Image* imgHR)
+    {
+        int scale = Settings::Manager::getInt("scale factor", "Video");
+        
+        int HRWidth = mViewer->getCamera()->getViewport()->width();
+        int HRHeight = mViewer->getCamera()->getViewport()->height();
+        int LRWidth = HRWidth / scale;
+        int LRHeight = HRHeight / scale;
+        renderInResolution(imgLR, LRWidth, LRHeight);
+        renderInResolution(imgHR, HRWidth, HRHeight);
+    }
+
+
     void ScreenshotManager::traversalsAndWait(unsigned int frame)
     {
         // Ref https://gitlab.com/OpenMW/openmw/-/issues/6013
@@ -332,5 +356,20 @@ namespace MWRender
         rttCamera->setClearMask(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         renderCameraToImage(rttCamera.get(),image,w,h);
+    }
+
+    void ScreenshotManager::renderInResolution(osg::Image* image, int w, int h)
+    {
+        osg::ref_ptr<osg::Camera> camera(new osg::Camera);
+
+        camera->setClearColor(mViewer->getCamera()->getClearColor());
+        camera->setClearMask(mViewer->getCamera()->getClearMask());
+        camera->setColorMask(mViewer->getCamera()->getColorMask());
+        camera->setTransformOrder(mViewer->getCamera()->getTransformOrder());
+        camera->setProjectionMatrix(mViewer->getCamera()->getProjectionMatrix());
+        camera->setViewMatrix(mViewer->getCamera()->getViewMatrix());
+        camera->addChild(mSceneRoot);
+        
+        renderCameraToImage(camera, image, w, h);
     }
 }

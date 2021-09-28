@@ -26,6 +26,7 @@ namespace MWRender
 
         void screenshot(osg::Image* image, int w, int h);
         bool screenshot360(osg::Image* image);
+        void screenshotHRLR(osg::Image* imgLR, osg::Image* imgHR);
 
     private:
         osg::ref_ptr<osgViewer::Viewer> mViewer;
@@ -38,6 +39,7 @@ namespace MWRender
         void traversalsAndWait(unsigned int frame);
         void renderCameraToImage(osg::Camera *camera, osg::Image *image, int w, int h);
         void makeCubemapScreenshot(osg::Image* image, int w, int h, osg::Matrixd cameraTransform=osg::Matrixd());
+        void renderInResolution(osg::Image* image, int w, int h);
     };
 }
 

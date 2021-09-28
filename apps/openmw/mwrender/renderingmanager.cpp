@@ -828,6 +828,12 @@ namespace MWRender
         return true;
     }
 
+    void RenderingManager::screenshotHRLR(osg::Image* imgLR, osg::Image* imgHR)
+    {
+        mScreenshotManager->screenshotHRLR(imgLR, imgHR);
+    }
+
+
     osg::Vec4f RenderingManager::getScreenBounds(const osg::BoundingBox &worldbb)
     {
         if (!worldbb.valid()) return osg::Vec4f();

@@ -430,6 +430,10 @@ OMW::Engine::~Engine()
 {
     if (mScreenCaptureOperation != nullptr)
         mScreenCaptureOperation->stop();
+    if (mHRScreenCaptureOperation != nullptr)
+        mHRScreenCaptureOperation->stop();
+    if (mLRScreenCaptureOperation != nullptr)
+        mLRScreenCaptureOperation->stop();
 
     mEnvironment.cleanup();
 
@@ -710,9 +714,44 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
         )
     );
 
+
+
     mScreenCaptureHandler = new osgViewer::ScreenCaptureHandler(mScreenCaptureOperation);
 
     mViewer->addEventHandler(mScreenCaptureHandler);
+
+    // begin
+    // added for data generate
+    {
+        mHRScreenCaptureOperation = new SceneUtil::AsyncScreenCaptureOperation(
+            mWorkQueue,
+            new SceneUtil::WriteScreenshotToFileOperation(
+                //"C:\\Users\\Acer\\Desktop\\Documents\\diplome\\practice\\data\\GT",
+                Settings::Manager::getString("hrscreen path", "General"),
+                Settings::Manager::getString("screenshot format", "General"),
+                Settings::Manager::getBool("notify on saved screenshot", "General")
+                ? std::function<void(std::string)>(ScheduleNonDialogMessageBox{})
+                : std::function<void(std::string)>(IgnoreString{})
+            )
+        );
+        mHRScreenCaptureHandler = new osgViewer::ScreenCaptureHandler(mHRScreenCaptureOperation);
+        mViewer->addEventHandler(mHRScreenCaptureHandler);
+
+        mLRScreenCaptureOperation = new SceneUtil::AsyncScreenCaptureOperation(
+            mWorkQueue,
+            new SceneUtil::WriteScreenshotToFileOperation(
+                //"C:\\Users\\Acer\\Desktop\\Documents\\diplome\\practice\\data\\dataset",
+                Settings::Manager::getString("lrscreen path", "General"),
+                Settings::Manager::getString("screenshot format", "General"),
+                Settings::Manager::getBool("notify on saved screenshot", "General")
+                ? std::function<void(std::string)>(ScheduleNonDialogMessageBox{})
+                : std::function<void(std::string)>(IgnoreString{})
+            )
+        ); 
+        mLRScreenCaptureHandler = new osgViewer::ScreenCaptureHandler(mLRScreenCaptureOperation);
+        mViewer->addEventHandler(mLRScreenCaptureHandler);
+    }
+    // end
 
     mLuaManager = new MWLua::LuaManager(mVFS.get(), mLuaScriptListFiles);
     mEnvironment.setLuaManager(mLuaManager);
@@ -764,7 +803,8 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
                 Version::getOpenmwVersionDescription(mResDir.string()), mCfgMgr.getUserConfigPath().string());
     mEnvironment.setWindowManager (window);
 
-    MWInput::InputManager* input = new MWInput::InputManager (mWindow, mViewer, mScreenCaptureHandler, mScreenCaptureOperation, keybinderUser, keybinderUserExists, userGameControllerdb, gameControllerdb, mGrab);
+    MWInput::InputManager* input = new MWInput::InputManager (mWindow, mViewer, mScreenCaptureHandler, mScreenCaptureOperation, keybinderUser, keybinderUserExists, userGameControllerdb, gameControllerdb, mGrab,
+        mHRScreenCaptureOperation, mLRScreenCaptureOperation);
     mEnvironment.setInputManager (input);
 
     // Create sound system

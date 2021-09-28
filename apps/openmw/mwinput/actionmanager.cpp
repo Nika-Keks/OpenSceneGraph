@@ -5,6 +5,7 @@
 #include <SDL_keyboard.h>
 
 #include <components/settings/settings.hpp>
+#include <osgDB/WriteFile>
 
 #include "../mwbase/inputmanager.hpp"
 #include "../mwbase/statemanager.hpp"
@@ -29,9 +30,9 @@ namespace MWInput
     const float ZOOM_SCALE = 10.f; /// Used for scrolling camera in and out
 
     ActionManager::ActionManager(BindingsManager* bindingsManager,
-            osgViewer::ScreenCaptureHandler::CaptureOperation* screenCaptureOperation,
-            osg::ref_ptr<osgViewer::Viewer> viewer,
-            osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler)
+        osgViewer::ScreenCaptureHandler::CaptureOperation* screenCaptureOperation,
+        osg::ref_ptr<osgViewer::Viewer> viewer,
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler)
         : mBindingsManager(bindingsManager)
         , mViewer(viewer)
         , mScreenCaptureHandler(screenCaptureHandler)
@@ -42,7 +43,21 @@ namespace MWInput
         , mOverencumberedMessageDelay(0.f)
         , mPreviewPOVDelay(0.f)
         , mTimeIdle(0.f)
+        , mHRScreenCaptureOperation(nullptr)
+        ,mLRScreenCaptureOperation(nullptr)
     {
+    }
+
+    ActionManager::ActionManager(BindingsManager* bindingsManager, 
+        osgViewer::ScreenCaptureHandler::CaptureOperation* screenCaptureOperation, 
+        osg::ref_ptr<osgViewer::Viewer> viewer, 
+        osg::ref_ptr<osgViewer::ScreenCaptureHandler> screenCaptureHandler, 
+        osgViewer::ScreenCaptureHandler::CaptureOperation* hrScreenCaptureOperation, 
+        osgViewer::ScreenCaptureHandler::CaptureOperation* lrScreenCaptureOperation)
+    : ActionManager(bindingsManager, screenCaptureOperation, viewer, screenCaptureHandler)
+    {
+        mHRScreenCaptureOperation = hrScreenCaptureOperation;
+        mLRScreenCaptureOperation = lrScreenCaptureOperation;
     }
 
     void ActionManager::update(float dt, bool triedToMove)
@@ -340,6 +355,14 @@ namespace MWInput
         {
             mScreenCaptureHandler->setFramesToCapture(1);
             mScreenCaptureHandler->captureNextFrame(*mViewer);
+        }
+        else if(settingStr.compare("hrandlr") == 0) 
+        {
+            osg::ref_ptr<osg::Image> imgHR(new osg::Image);
+            osg::ref_ptr<osg::Image> imgLR(new osg::Image);
+            MWBase::Environment::get().getWorld()->screenshotHRLR(imgLR, imgHR);
+            (*mHRScreenCaptureOperation) (*(imgHR.get()), 0);
+            (*mLRScreenCaptureOperation) (*(imgLR.get()), 0);
         }
         else
         {
