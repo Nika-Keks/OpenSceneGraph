@@ -276,8 +276,8 @@ namespace MWRender
 
     void ScreenshotManager::screenshotHRLR(osg::Image* imgLR, osg::Image* imgHR)
     {
+        int scale = Settings::Manager::getInt("scale factor", "Video");
         
-        int scale = 2;
         int HRWidth = mViewer->getCamera()->getViewport()->width();
         int HRHeight = mViewer->getCamera()->getViewport()->height();
         int LRWidth = HRWidth / scale;

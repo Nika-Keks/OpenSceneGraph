@@ -726,7 +726,8 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
         mHRScreenCaptureOperation = new SceneUtil::AsyncScreenCaptureOperation(
             mWorkQueue,
             new SceneUtil::WriteScreenshotToFileOperation(
-                "C:\\Users\\Acer\\Desktop\\Documents\\diplome\\practice\\data\\GT",
+                //"C:\\Users\\Acer\\Desktop\\Documents\\diplome\\practice\\data\\GT",
+                Settings::Manager::getString("hrscreen path", "General"),
                 Settings::Manager::getString("screenshot format", "General"),
                 Settings::Manager::getBool("notify on saved screenshot", "General")
                 ? std::function<void(std::string)>(ScheduleNonDialogMessageBox{})
@@ -739,13 +740,14 @@ void OMW::Engine::prepareEngine (Settings::Manager & settings)
         mLRScreenCaptureOperation = new SceneUtil::AsyncScreenCaptureOperation(
             mWorkQueue,
             new SceneUtil::WriteScreenshotToFileOperation(
-                "C:\\Users\\Acer\\Desktop\\Documents\\diplome\\practice\\data\\dataset",
+                //"C:\\Users\\Acer\\Desktop\\Documents\\diplome\\practice\\data\\dataset",
+                Settings::Manager::getString("lrscreen path", "General"),
                 Settings::Manager::getString("screenshot format", "General"),
                 Settings::Manager::getBool("notify on saved screenshot", "General")
                 ? std::function<void(std::string)>(ScheduleNonDialogMessageBox{})
                 : std::function<void(std::string)>(IgnoreString{})
             )
-        );
+        ); 
         mLRScreenCaptureHandler = new osgViewer::ScreenCaptureHandler(mLRScreenCaptureOperation);
         mViewer->addEventHandler(mLRScreenCaptureHandler);
     }
