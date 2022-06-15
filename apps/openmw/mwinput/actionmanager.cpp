@@ -292,8 +292,15 @@ namespace MWInput
 
         if (regularScreenshot)
         {
+            /*
             mScreenCaptureHandler->setFramesToCapture(1);
             mScreenCaptureHandler->captureNextFrame(*mViewer);
+            */
+            int h = Settings::Manager::getInt("screen w", "Video");
+            int w = Settings::Manager::getInt("screen h", "Video");
+            osg::ref_ptr<osg::Image> screenshot(new osg::Image);
+            MWBase::Environment::get().getWorld()->screenshot(screenshot, h, w);
+            (*mScreenCaptureOperation) (*(screenshot.get()), 0);
         }
         else
         {

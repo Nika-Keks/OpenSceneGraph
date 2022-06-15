@@ -130,6 +130,7 @@ namespace MWRender
 
     void ScreenshotManager::screenshot(osg::Image* image, int w, int h)
     {
+        /*
         osg::Camera* camera = mViewer->getCamera();
         osg::ref_ptr<osg::Drawable> tempDrw = new osg::Drawable;
         tempDrw->setDrawCallback(new ReadImageFromFramebufferCallback(image, w, h));
@@ -140,6 +141,18 @@ namespace MWRender
         // now that we've "used up" the current frame, get a fresh frame number for the next frame() following after the screenshot is completed
         mViewer->advance(mViewer->getFrameStamp()->getSimulationTime());
         camera->removeChild(tempDrw);
+        */
+        osg::ref_ptr<osg::Camera> camera(new osg::Camera);
+
+        camera->setClearColor(mViewer->getCamera()->getClearColor());
+        camera->setClearMask(mViewer->getCamera()->getClearMask());
+        camera->setColorMask(mViewer->getCamera()->getColorMask());
+        camera->setTransformOrder(mViewer->getCamera()->getTransformOrder());
+        camera->setProjectionMatrix(mViewer->getCamera()->getProjectionMatrix());
+        camera->setViewMatrix(mViewer->getCamera()->getViewMatrix());
+        camera->addChild(mSceneRoot);
+
+        renderCameraToImage(camera, image, w, h);
     }
 
     bool ScreenshotManager::screenshot360(osg::Image* image)
